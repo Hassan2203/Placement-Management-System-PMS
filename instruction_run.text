@@ -1,0 +1,56 @@
+HOW TO RUN – NAMAL PLACEMENT MANAGEMENT SYSTEM (NPMS)
+
+This project is uploaded as individual files and folders on GitHub.
+
+
+PROJECT FOLDER STRUCTURE:
+  here is project folder strture in visual code 
+Namal-Placement-Management-System-NPMS/
+|
+|-- app.py              (Main Flask application)
+|-- logic.py            (Backend logic / configuration)
+|
+|-- templates/
+|     |-- login.html
+|     |-- student_dashboard.html
+|     |-- placement_dashboard.html
+|     |-- exam_dashboard.html
+|     |-- error.html
+|
+|-- static/             (CSS, JS, images if available)
+
+STEPS TO RUN THE PROJECT:
+
+1. Clone the repository from GitHub OR download the project files.
+
+2. Open Visual Studio Code.
+
+3. Click on File -> Open Folder and select:
+   Namal-Placement-Management-System-NPMS
+
+4. Make sure Python is installed on your system.
+   Check by running:
+   python --version
+
+5. Open the terminal in Visual Studio Code.
+   Shortcut: Ctrl + `
+
+6. Install Flask by running:
+   pip install flask
+
+7. Run the project using:
+   python app.py
+
+8. Open your web browser and visit:
+   http://127.0.0.1:5000/
+
+RESULT:
+
+The Flask server will start successfully and the login page will appear.
+The application is now ready to use.
+
+IMPORTANT NOTES:
+
+- Run all commands from the project root folder
+- Do not rename app.py or the templates folder
+- Keep the folder structure unchanged
