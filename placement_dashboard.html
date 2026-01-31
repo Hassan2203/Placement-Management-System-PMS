@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Dashboard - Namal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1600px; margin: 0 auto; }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 { color: #11998e; font-size: 2em; }
+
+        .btn-logout {
+            padding: 10px 25px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .flash-messages { margin-bottom: 20px; }
+
+        .flash {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .flash.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .flash.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .stat-icon { font-size: 3em; margin-bottom: 10px; }
+        .stat-number { font-size: 2.5em; font-weight: 700; color: #11998e; margin-bottom: 5px; }
+        .stat-label { color: #6c757d; font-size: 1em; font-weight: 500; }
+
+        .tab-navigation {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-color: #11998e;
+        }
+
+        .tab-btn span { font-size: 1.3em; }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            color: #11998e;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            border-bottom: 3px solid #38ef7d;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .required { color: #dc3545; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #11998e;
+            box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.1);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover { background: #f8f9fa; }
+
+        .cgpa-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .type-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-internship { background: #cfe2ff; color: #084298; }
+        .badge-job { background: #d1e7dd; color: #0f5132; }
+
+        .eligible-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: help;
+        }
+
+        .distance-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #333;
+            color: white;
+            text-align: left;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0056b3;
+            color: #004085;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .info-box strong { color: #0056b3; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state h3 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Placement Office Dashboard</h1>
+            <a href="/logout" class="btn-logout">Logout</a>
+        </div>
+
+        {% if get_flashed_messages() %}
+        <div class="flash-messages">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👨‍🎓</div>
+                <div class="stat-number">{{ stats.total_students }}</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💼</div>
+                <div class="stat-number">{{ stats.total_opportunities }}</div>
+                <div class="stat-label">Posted Opportunities</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">{{ stats.active_students }}</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number">{{ "%.2f"|format(stats.avg_cgpa) }}</div>
+                <div class="stat-label">Average CGPA</div>
+            </div>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="showTab('register')">
+                <span>👨‍🎓</span> Register Student
+            </button>
+            <button class="tab-btn" onclick="showTab('students')">
+                <span>📋</span> View Students
+            </button>
+            <button class="tab-btn" onclick="showTab('post')">
+                <span>📢</span> Post Opportunity
+            </button>
+            <button class="tab-btn" onclick="showTab('opportunities')">
+                <span>💼</span> View Opportunities
+            </button>
+        </div>
+
+        <!-- Register Student Tab -->
+        <div id="tab-register" class="tab-content active">
+            <div class="section">
+                <h2>👨‍🎓 Register New Student</h2>
+                <div class="info-box">
+                    <strong>Note:</strong> When you register a student, a login account is automatically created. 
+                    The student can use their Reg No and the password you assign to access the Student Portal.
+                    <strong>Email notifications will be sent to registered emails when new opportunities are posted.</strong>
+                </div>
+                
+                <form method="POST">
+                    <input type="hidden" name="action" value="register_student">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Registration No <span class="required">*</span></label>
+                            <input type="text" name="reg_no" placeholder="e.g., 2024-CS-001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="name" placeholder="e.g., Ahmad Khan" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address <span class="required">*</span></label>
+                            <input type="email" name="email" placeholder="e.g., ahmad@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Program <span class="required">*</span></label>
+                            <select name="program" required>
+                                <option value="">-- Select Program --</option>
+                                <option value="CS">Computer Science (CS)</option>
+                                <option value="EE">Electrical Engineering (EE)</option>
+                                <option value="MATH">Mathematics (MATH)</option>
+                                <option value="BBA">Business Administration (BBA)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Assign Password <span class="required">*</span></label>
+                            <input type="text" name="password" placeholder="e.g., student123" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Register Student</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Students Tab -->
+        <div id="tab-students" class="tab-content">
+            <div class="section">
+                <h2>📋 Registered Students (Sorted by CGPA)</h2>
+                {% if students %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CGPA</th>
+                            <th>Reg No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Program</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><span class="cgpa-badge">{{ student.cgpa }}</span></td>
+                            <td>{{ student.reg_no }}</td>
+                            <td><strong>{{ student.name }}</strong></td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.program }}</td>
+                            <td>{{ student.semester }}</td>
+                            <td>Year {{ student.year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <h3>No students registered yet</h3>
+                    <p>Register the first student using the form above</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Post Opportunity Tab -->
+        <div id="tab-post" class="tab-content">
+            <div class="section">
+                <h2>📢 Post New Opportunity (Job / Internship)</h2>
+                <div class="info-box">
+                    <strong>📧 Email Notification:</strong> When you post an opportunity, automated email notifications 
+                    will be sent to ALL registered students informing them to check the portal.
+                    <br><strong>Distance Calculation:</strong> The system automatically calculates the shortest distance 
+                    from Mianwali (Namal University) using Dijkstra's algorithm.
+                </div>
+                
+                <form method="POST">
+                    <input type="hidden" name="action" value="post_opportunity">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Job ID <span class="required">*</span></label>
+                            <input type="text" name="opp_id" placeholder="e.g., JOB-001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Job Title <span class="required">*</span></label>
+                            <input type="text" name="title" placeholder="e.g., Software Developer" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Type <span class="required">*</span></label>
+                            <select name="type" required>
+                                <option value="Internship">Internship</option>
+                                <option value="Job">Full-time Job</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Min CGPA <span class="required">*</span></label>
+                            <input type="number" step="0.01" name="min_cgpa" placeholder="e.g., 2.5" min="0" max="4" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Application Link <span class="required">*</span></label>
+                            <input type="url" name="link" placeholder="https://company.com/apply" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Location <span class="required">*</span></label>
+                            <select name="location" required>
+                                <option value="">-- Select City --</option>
+                                <option value="Mianwali">Mianwali (0 km)</option>
+                                <option value="Talagang">Talagang</option>
+                                <option value="Islamabad">Islamabad</option>
+                                <option value="Rawalpindi">Rawalpindi</option>
+                                <option value="Lahore">Lahore</option>
+                                <option value="Faisalabad">Faisalabad</option>
+                                <option value="Multan">Multan</option>
+                                <option value="Karachi">Karachi</option>
+                                <option value="Peshawar">Peshawar</option>
+                                <option value="Sargodha">Sargodha</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Chakwal">Chakwal</option>
+                                <option value="Bhakkar">Bhakkar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Details / Description</label>
+                        <textarea name="details" placeholder="Job description..." rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Post Opportunity & Send Emails</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Opportunities Tab -->
+        <div id="tab-opportunities" class="tab-content">
+            <div class="section">
+                <h2>💼 Posted Opportunities & Eligible Students</h2>
+                {% if opportunities %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Min CGPA</th>
+                            <th>Location</th>
+                            <th>Distance</th>
+                            <th>Eligible</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for opp in opportunities %}
+                        <tr>
+                            <td><strong>{{ opp.id }}</strong></td>
+                            <td>{{ opp.title }}</td>
+                            <td>
+                                <span class="type-badge {% if opp.type == 'Internship' %}badge-internship{% else %}badge-job{% endif %}">
+                                    {{ opp.type }}
+                                </span>
+                            </td>
+                            <td>{{ opp.min_cgpa }}</td>
+                            <td>📍 {{ opp.location }}</td>
+                            <td>
+                                <span class="distance-badge">
+                                    {% if opp.distance == "Unknown Location" %}
+                                        ❌ Unknown
+                                    {% elif opp.distance == "No Route" %}
+                                        ❌ No Route
+                                    {% else %}
+                                        🚗 {{ opp.distance }} km
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="eligible-badge tooltip">
+                                    {{ opp.eligible_count }} eligible
+                                    <span class="tooltiptext">
+                                        <strong>Eligible Students:</strong><br>
+                                        {{ opp.eligible_names if opp.eligible_names else 'None' }}
+                                    </span>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ opp.link }}" target="_blank" style="color: #11998e; text-decoration: none; font-weight: 600;">
+                                    View →
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <h3>No opportunities posted yet</h3>
+                    <p>Post the first opportunity using the form above</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+    </script>
+</body>
+</html>
