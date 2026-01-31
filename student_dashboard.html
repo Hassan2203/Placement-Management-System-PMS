@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Namal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 { color: #667eea; font-size: 2em; }
+
+        .btn-logout {
+            padding: 10px 25px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .flash {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-left: 6px solid #667eea;
+        }
+
+        .profile-card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .info-item strong {
+            display: block;
+            color: #667eea;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .gpa-history {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 3px solid #0056b3;
+        }
+
+        .gpa-history strong { color: #0056b3; }
+
+        .section-title {
+            color: white;
+            font-size: 1.8em;
+            text-align: center;
+            margin: 30px 0 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-subtitle {
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .opp-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-left: 6px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .opp-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .opp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .opp-header h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .type-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .opp-meta {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .opp-meta strong { color: #333; }
+
+        .opp-details {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .location-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        .location-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .distance-info {
+            margin-top: 10px;
+        }
+
+        .distance-highlight {
+            background: #fff3cd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .distance-valid {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .distance-error {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .distance-note {
+            color: #6c757d;
+            font-size: 0.85em;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .btn-apply {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .empty-state h3 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #6c757d;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .error-card {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .error-card h2 { color: #856404; }
+        .error-card p { color: #856404; }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e9ecef;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Student Portal</h1>
+            <a href="/logout" class="btn-logout">Logout</a>
+        </div>
+
+        {% if get_flashed_messages() %}
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if student %}
+        <div class="profile-card">
+            <h2>Welcome, {{ student.name }}!</h2>
+            
+            <div class="profile-grid">
+                <div class="info-item">
+                    <strong>Registration No</strong>
+                    <span>{{ student.reg_no }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Program</strong>
+                    <span>{{ student.program }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Current CGPA</strong>
+                    <span>{{ student.cgpa }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Semester (Year)</strong>
+                    <span>{{ student.semester }} (Year {{ student.year }})</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="gpa-history">
+                <strong>📊 Semester GPA History:</strong>
+                {% if gpa_history %}
+                    {{ gpa_history | join(', ') }}
+                {% else %}
+                    First Semester - No history yet
+                {% endif %}
+            </div>
+        </div>
+
+        <h2 class="section-title">🎯 Eligible Opportunities for You</h2>
+        <p class="section-subtitle">
+            Based on your CGPA ({{ student.cgpa }}), here are jobs & internships you qualify for
+        </p>
+
+        {% if opportunities %}
+            {% for opp in opportunities %}
+            <div class="opp-card">
+                <div class="opp-header">
+                    <h3>{{ opp.title }}</h3>
+                    <span class="type-badge">{{ opp.type }}</span>
+                </div>
+
+                <p class="opp-meta">
+                    <strong>Min CGPA Required:</strong> {{ opp.min_cgpa }} | 
+                    <strong>Your CGPA:</strong> {{ student.cgpa }} ✓
+                </p>
+
+                {% if opp.details %}
+                <p class="opp-details">{{ opp.details }}</p>
+                {% endif %}
+
+                <div class="location-box">
+                    <div class="location-title">📍 Location: {{ opp.location }}</div>
+
+                    <div class="distance-info">
+                        {% if opp.distance_km == "Unknown Location" %}
+                            <span class="distance-error">⚠️ Location not found in route database</span>
+                        {% elif opp.distance_km == "No Route" %}
+                            <span class="distance-error">🚫 No direct route available from Mianwali</span>
+                        {% elif opp.distance_km == 0 %}
+                            <div class="distance-highlight">
+                                <span class="distance-valid">
+                                    📍 On-Campus / Mianwali (0 km)
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="distance-highlight">
+                                <span class="distance-valid">
+                                    🚗 {{ opp.distance_km }} km from Mianwali (Namal University)
+                                </span>
+                                <div class="distance-note">
+                                    Distance calculated using Dijkstra's shortest path algorithm
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if opp.link and opp.link.strip() and opp.link != '#' %}
+                    <a href="{{ opp.link }}" target="_blank" rel="noopener noreferrer" class="btn-apply">
+                        Apply Now →
+                    </a>
+                {% else %}
+                    <button class="btn-apply btn-disabled" disabled>
+                        No Application Link Available
+                    </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No Matching Opportunities Yet</h3>
+                <p>Keep working hard! Improve your CGPA to unlock more opportunities.</p>
+                <p style="margin-top: 10px; font-size: 0.95em;">
+                    Current CGPA: {{ student.cgpa }} - Continue your studies to increase your eligibility
+                </p>
+            </div>
+        {% endif %}
+
+        {% else %}
+            <div class="profile-card error-card">
+                <h2>⚠️ Student Record Not Found</h2>
+                <p style="margin-top: 15px;">
+                    There was an error retrieving your data. Please contact the Administration Office.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
