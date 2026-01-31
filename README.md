@@ -107,6 +107,18 @@ Traditional placement management suffers from:
 - Python scripts (`app.py`, logic modules)  
 - HTML templates  
 ---
+##  contributer
+
+This project was developed collaboratively by the following contributors:
+
+1. Raheem Bakhsh
+   GitHub ID: raheembakhsh761-del
+   GitHub Profile: https://github.com/raheembakhsh761-del
+
+2. Hassan Ali
+   GitHub ID: hassan-ali-username
+   GitHub Profile: https://github.com/hassan-ali-username
+
 
 ## ▶️ How to Run the Project
 
