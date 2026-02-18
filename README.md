@@ -117,7 +117,7 @@ This project was developed collaboratively by the following contributors:
 
 2. Hassan Ali
    GitHub ID: hassan-ali-username
-   GitHub Profile: https://github.com/hassan-ali-username
+   GitHub Profile: https://github.com/Hassan2203
 
 
 ## ▶️ How to Run the Project
